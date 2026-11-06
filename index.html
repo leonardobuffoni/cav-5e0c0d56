@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'">
+<meta name="robots" content="noindex, nofollow">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#f2f4f9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0a0c14" media="(prefers-color-scheme: dark)">
+<title>Conto personale</title>
+<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+</head>
+<body class="personale">
+<main>
+  <div class="brand-strip"><span class="brand-mark" aria-hidden="true">b.</span><span>BUFFONI<span class="brand-light"> / PERSONALE</span></span><span class="brand-end">01</span></div>
+  <header class="top">
+    <div>
+      <div class="eyebrow">Leonardo Buffoni · Intesa Sanpaolo</div>
+      <h1>Conto personale</h1>
+      <p class="sub">Quanto entra, quanto esce e dove vanno i soldi.</p>
+    </div>
+    <div class="actions">
+      <button type="button" id="maskBtn" class="button icon-btn" aria-pressed="false"><svg class="eye" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><svg class="eye-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18"/><path d="M10.6 5.1A10.4 10.4 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-3.2 4.1M6.6 6.6C3.8 8.4 2 12 2 12s3.6 7 10 7a9.8 9.8 0 0 0 5.4-1.6"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg><span>Nascondi importi</span></button>
+      <a class="button primary ext" target="_blank" rel="noopener noreferrer" href="https://github.com/leonardobuffoni/ca-aggregator/actions/workflows/daily.yml" title="Apre GitHub: premi Run workflow">Aggiorna</a>
+      <a class="button ext" target="_blank" rel="noopener noreferrer" href="https://github.com/leonardobuffoni/ca-aggregator/actions/workflows/import.yml">Carica estratti</a>
+    </div>
+  </header>
+
+  <div class="sync-strip">
+    <div><span id="dot" class="dot"></span><span id="syncText">Carico…</span></div>
+    <span id="consent"></span>
+    <p id="refreshSchedule" class="hidden"></p>
+  </div>
+  <div id="serviceAlerts" aria-live="polite"></div>
+  <div id="fatal" class="fatal hidden" role="alert"></div>
+
+  <nav class="tabs" aria-label="Sezioni">
+    <a href="#sintesi" class="on">Sintesi</a><a href="#andamento">Andamento</a><a href="#voci">Spese per voce</a><a href="#analisi">Analisi spese</a><a href="#movimenti">Movimenti</a><a href="#approfondimenti">Approfondimenti</a>
+  </nav>
+
+  <section class="section" id="sintesi">
+    <div class="section-head"><div><h2>Il mese medio</h2><p id="planPeriod"></p></div></div>
+    <div id="planCards" class="kpis"></div>
+    <div class="grid half mt16">
+      <div class="panel">
+        <div class="panel-head"><div><h3>Quanto dello stipendio se ne va</h3><p>Uscite ordinarie medie sullo stipendio medio.</p></div></div>
+        <div id="ratio"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div><h3>Da tenere d’occhio</h3><p>Segnali calcolati sui mesi completi.</p></div></div>
+        <ul id="planAlerts" class="insights"></ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="andamento">
+    <div class="section-head"><div><h2>Andamento</h2><p>Stipendio e uscite degli ultimi 12 mesi chiusi. Clicca un mese per analizzarne le spese.</p></div></div>
+    <div class="panel">
+      <div class="panel-head"><div><h3>Stipendio e uscite</h3><p>Le colonne chiare sono mesi con copertura incompleta.</p></div><div id="trendLegend"></div></div>
+      <div id="trendChart" class="chart"></div>
+    </div>
+  </section>
+
+  <section class="section" id="voci">
+    <div class="section-head"><div><h2>Spese per voce, mese per mese</h2><p id="matrixSub">Quanto spendi in media ogni mese e come si distribuisce per categoria. Clicca un importo per aprirne il dettaglio.</p></div></div>
+    <dl id="avgFacts" class="facts"></dl>
+    <div class="table-wrap matrix-wrap mt16"><table class="data matrix" id="matrix"></table></div>
+    <div class="matrix-legend" id="matrixLegend"></div>
+    <p class="note mt12" id="matrixNote"></p>
+  </section>
+
+  <section class="section" id="analisi">
+    <div class="section-head">
+      <div><h2>Analisi spese</h2><p>Dalla categoria all’esercente fino al singolo movimento.</p></div>
+      <div class="toolbar">
+        <label class="field"><span>Periodo</span><select id="period"></select></label>
+        <div class="seg" role="group" aria-label="Tipo"><button type="button" id="modeOut" aria-pressed="true">Uscite</button><button type="button" id="modeIn" aria-pressed="false">Entrate</button></div>
+      </div>
+    </div>
+    <dl id="periodFacts" class="facts"></dl>
+    <div class="panel mt16">
+      <nav id="crumbs" class="crumbs" aria-label="Percorso"></nav>
+      <div id="drill"></div>
+    </div>
+  </section>
+
+  <section class="section" id="movimenti">
+    <div class="section-head"><div><h2>Movimenti</h2><p id="movSub"></p></div></div>
+    <div class="toolbar mb12">
+      <label class="field grow"><span>Cerca</span><input id="q" type="search" placeholder="Descrizione, esercente, importo"></label>
+      <label class="field"><span>Tipo</span><select id="dir"><option value="all">Tutti</option><option value="in">Solo entrate</option><option value="out">Solo uscite</option></select></label>
+      <label class="field"><span>Natura</span><select id="nature"><option value="">Tutte</option><option value="ordinary">Solo ordinarie</option><option value="extraordinary">Solo straordinarie</option></select></label>
+      <label class="field"><span>Categoria</span><select id="cat"><option value="">Tutte le categorie</option></select></label>
+    </div>
+    <div class="table-wrap">
+      <table class="data">
+        <thead><tr><th>Data</th><th>Movimento</th><th class="hide-sm">Conto</th><th class="amt">Importo</th></tr></thead>
+        <tbody id="rows"><tr><td colspan="4" class="empty">Carico…</td></tr></tbody>
+        <tfoot id="rowsFoot"></tfoot>
+      </table>
+    </div>
+    <div class="table-foot"><span id="status"></span><button id="moreRows" class="hidden" type="button">Mostra altri 30</button></div>
+  </section>
+
+  <section class="more" id="approfondimenti">
+    <details class="disc" id="expenseSplit"><summary><span>Spese straordinarie e totale uscite</span><small id="extraMeta"></small></summary>
+      <div class="disc-body"><p id="expenseSummary" class="note"></p><div id="extraordinaryList" class="list mt12"></div><p class="note mt12">Le spese senza evidenze sufficienti restano nella media ordinaria. <a target="_blank" rel="noopener noreferrer" href="https://github.com/leonardobuffoni/ca-aggregator/edit/main/config/regole.json">Correggi le regole su GitHub ↗</a></p></div>
+    </details>
+    <details class="disc"><summary><span>Spese ricorrenti</span><small id="recMeta"></small></summary><div class="disc-body"><div id="recurring" class="list"></div></div></details>
+    <details class="disc"><summary><span>Da controllare</span><small>soglie configurabili, non significa frode</small></summary><div class="disc-body"><div id="anomalies" class="list"></div></div></details>
+    <details class="disc" id="aiBox"><summary><span>Commento sui dati</span><small id="aiMeta"></small></summary><div class="disc-body"><div id="aiOut" class="ai-out"></div><p class="note mt12">Commento AI basato sugli aggregati verificati.</p></div></details>
+    <details class="disc"><summary><span>Saldi e metodo di calcolo</span></summary><div class="disc-body"><dl id="balances" class="facts mb12"></dl><p id="planMethod" class="note"></p></div></details>
+  </section>
+  <p class="footer">Dati cifrati · accesso in sola lettura · importi in EUR</p>
+</main>
+<script src="status.js"></script>
+<script src="ui.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
