@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'">
+<meta name="robots" content="noindex, nofollow">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#f2f4f9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0a0c14" media="(prefers-color-scheme: dark)">
+<title>B&amp;B Sant'Alessandro</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+</head>
+<body class="bnb">
+<main>
+  <div class="brand-strip"><span class="brand-mark" aria-hidden="true">b.</span><span>BUFFONI<span class="brand-light"> / OSPITALITÀ</span></span><span class="brand-end">02</span></div>
+  <header class="top">
+    <div>
+      <div class="eyebrow">B&amp;B · Conto Fideuram</div>
+      <h1>Sant’Alessandro</h1>
+      <p class="sub" id="subtitle">Conto economico gestionale della casa.</p>
+    </div>
+    <div class="actions">
+      <button type="button" id="maskBtn" class="button icon-btn" aria-pressed="false"><svg class="eye" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><svg class="eye-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18"/><path d="M10.6 5.1A10.4 10.4 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-3.2 4.1M6.6 6.6C3.8 8.4 2 12 2 12s3.6 7 10 7a9.8 9.8 0 0 0 5.4-1.6"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg><span>Nascondi importi</span></button>
+      <a class="button primary ext" href="https://github.com/leonardobuffoni/ca-aggregator/actions/workflows/daily.yml" target="_blank" rel="noopener noreferrer" title="Apre GitHub: premi Run workflow">Aggiorna</a>
+      <a class="button ext" href="https://github.com/leonardobuffoni/ca-aggregator/actions/workflows/import.yml" target="_blank" rel="noopener noreferrer">Carica estratti</a>
+    </div>
+  </header>
+
+  <div class="sync-strip">
+    <div><span id="dot" class="dot"></span><span id="syncText">Carico…</span></div>
+    <span id="consent"></span>
+    <p id="refreshSchedule" class="hidden"></p>
+  </div>
+  <div id="serviceAlerts" aria-live="polite"></div>
+  <div id="fatal" class="fatal hidden" role="alert"></div>
+
+  <nav class="tabs" aria-label="Sezioni">
+    <a href="#sintesi" class="on">Sintesi</a><a href="#mesi">Mese per mese</a><a href="#costi">Costi</a><a href="#quadratura">Quadratura</a><a href="#movimenti">Movimenti</a><a href="#approfondimenti">Approfondimenti</a>
+  </nav>
+
+  <section class="section" id="sintesi">
+    <div class="section-head"><div><h2 id="ytdTitle">Da inizio anno</h2><p id="ytdSub"></p></div></div>
+    <div id="kpis" class="kpis"></div>
+    <dl id="facts" class="facts"></dl>
+    <div class="panel mt16">
+      <div class="panel-head"><div><h3>Cosa dicono i numeri</h3><p>Letture calcolate sui dati verificati, senza AI.</p></div></div>
+      <ul id="reading" class="insights"></ul>
+    </div>
+  </section>
+
+  <section class="section" id="mesi">
+    <div class="section-head"><div><h2>Mese per mese</h2><p>Incassi e costi del periodo. Clicca un mese per aprirne il conto economico.</p></div><label class="field"><span>Confronta con</span><select id="cmpYear"></select></label></div>
+    <div class="grid two">
+      <div class="panel">
+        <div class="panel-head"><div><h3 id="chartTitle">Incassi e costi</h3><p>Le colonne chiare sono stime.</p></div><div id="chartLegend"></div></div>
+        <div id="monthChart" class="chart"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div><div class="eyebrow" id="monthKind">Conto economico</div><h3 id="monthTitle">—</h3></div><select id="monthSelect" aria-label="Mese"></select></div>
+        <div id="monthDetail"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="costi">
+    <div class="section-head"><div><h2>Dove vanno i soldi</h2><p id="costsSub">Costi da inizio anno per voce. Clicca una voce per vederne i movimenti.</p></div></div>
+    <div class="panel"><div id="composition" class="ranks"></div></div>
+  </section>
+
+  <section class="section" id="quadratura">
+    <div class="section-head"><div><h2>Quadratura con il conto</h2><p>Come si passa dal saldo dei movimenti bancari al margine gestionale, al centesimo.</p></div><span id="reconCheck"></span></div>
+    <div class="grid two">
+      <div class="panel"><div class="panel-head"><div><h3>Dal conto al margine</h3><p id="bridgeSub"></p></div></div><table class="bridge" id="bridge"></table></div>
+      <div class="panel"><div class="panel-head"><div><h3>Tassa di soggiorno</h3><p>Partita di giro: non entra nel margine.</p></div></div><dl id="taxFacts" class="facts"></dl><p class="note mt12" id="taxNote"></p></div>
+    </div>
+    <div class="panel mt16"><div class="panel-head"><div><h3>Voce per voce: pagato e costo del periodo</h3><p>“Pagato” è la somma esatta dei movimenti con quella voce. Clicca una riga per vederli.</p></div></div>
+      <div class="table-wrap"><table class="data recon" id="reconTable"></table></div></div>
+  </section>
+
+  <section class="section" id="movimenti">
+    <div class="section-head"><div><h2>Movimenti</h2><p>Tutti i movimenti del conto nell’anno, con la voce assegnata.</p></div></div>
+    <div class="toolbar mb12">
+      <label class="field"><span>Mese</span><select id="fMonth"></select></label>
+      <label class="field"><span>Voce</span><select id="fLine"></select></label>
+      <label class="field grow"><span>Cerca</span><input id="fText" type="search" placeholder="Causale o importo"></label>
+    </div>
+    <div class="table-wrap">
+      <table class="data">
+        <thead><tr><th>Data</th><th>Movimento</th><th class="amt">Importo</th></tr></thead>
+        <tbody id="txRows"><tr><td colspan="3" class="empty">Carico…</td></tr></tbody>
+        <tfoot id="txFoot"></tfoot>
+      </table>
+    </div>
+    <div class="table-foot"><span id="txCount"></span><button id="txMore" class="hidden" type="button">Mostra altri</button></div>
+  </section>
+
+  <section class="more" id="approfondimenti">
+    <details class="disc"><summary><span>Spese straordinarie</span><small id="extraMeta"></small></summary>
+      <div class="disc-body">
+        <p class="note">Causali esplicite e categorie verificate nell’Excel storico. Escluse dalla media e dalla previsione ordinaria, incluse nel risultato al momento del pagamento. Mutuo, utenze, pulizie e imposte periodiche restano ordinari. <a target="_blank" rel="noopener noreferrer" href="https://github.com/leonardobuffoni/ca-aggregator/edit/main/config/regole.json">Correggi le regole su GitHub ↗</a></p>
+        <div id="extraList" class="list mt12"></div>
+      </div>
+    </details>
+    <details class="disc"><summary><span>Movimenti da verificare</span><small id="checkMeta"></small></summary>
+      <div class="disc-body"><p class="note">Spese già incluse nel risultato, ma finite in “Altre spese” o “Prelievi”. Scegli la voce giusta (o lasciale come sono) e premi <b>Salva etichette</b> in basso.</p><div id="checkList" class="list mt12"></div></div>
+    </details>
+    <details class="disc"><summary><span>Consuntivo bancario</span><small>solo flussi di cassa, senza stime</small></summary>
+      <div class="disc-body">
+        <dl id="bankFacts" class="facts mb12"></dl>
+        <div class="table-wrap"><table class="data"><thead id="bankHead"></thead><tbody id="bankRows"></tbody><tfoot id="bankFoot"></tfoot></table></div>
+        <p class="note mt12">Giroconti e versamenti tra soci sono esclusi: non sono ricavi né spese.</p>
+      </div>
+    </details>
+    <details class="disc"><summary><span>Metodo e ipotesi</span><small>come sono calcolati i numeri</small></summary>
+      <div class="disc-body" id="method"></div>
+    </details>
+  </section>
+  <div id="tagBar" class="tag-bar hidden" role="region" aria-label="Etichette da salvare">
+    <div class="tag-bar-in"><span id="tagCount"></span><button type="button" id="tagReset">Annulla</button><button type="button" id="tagSave" class="button primary">Salva etichette</button></div>
+    <div id="tagHelp" class="tag-help hidden"></div>
+  </div>
+  <p class="footer">Dati cifrati · accesso in sola lettura · importi in EUR</p>
+</main>
+<script src="../status.js"></script>
+<script src="../ui.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
